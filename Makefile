@@ -35,4 +35,14 @@ migrate_down:
 	@migrate -path ./db/migrations -database "$(DB_CONN)" -verbose down
 	@echo "Migrations rolled back successfully"
 
-.PHONY: new_migration sqlc build start stop migrate_up migrate_down
+test:
+	@echo "Running tests..."
+	@go test ./... -tags "integration" -v
+	@echo "Tests ran successfully"
+
+swag:
+	@echo "Creating swag files ..."
+	@swag init
+	@echo "swag files are generated inside docs dir"
+
+.PHONY: new_migration sqlc build start stop migrate_up migrate_down test swag
