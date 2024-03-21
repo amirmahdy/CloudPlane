@@ -1,0 +1,21 @@
+version: '3.5'
+services:
+  db:
+    image: postgres:latest
+    container_name: cloudplane-db
+    ports: 
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ../app.env
+    networks:
+      - cloudplane-network
+
+
+networks:
+  cloudplane-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
