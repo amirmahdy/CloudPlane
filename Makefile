@@ -25,4 +25,14 @@ stop:
 	@docker-compose -p cloudplane -f docker/docker-compose.yml down
 	@echo "Server stopped successfully"
 
-.PHONY: new_migration sqlc build start stop
+migrate_up:
+	@echo "Running migrations..."
+	@migrate -path ./db/migrations -database "$(DB_CONN)" -verbose up
+	@echo "Migrations ran successfully"
+
+migrate_down:
+	@echo "Rolling back migrations..."
+	@migrate -path ./db/migrations -database "$(DB_CONN)" -verbose down
+	@echo "Migrations rolled back successfully"
+
+.PHONY: new_migration sqlc build start stop migrate_up migrate_down
