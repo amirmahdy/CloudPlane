@@ -6,7 +6,23 @@ package db
 
 import (
 	"database/sql"
+
+	"github.com/google/uuid"
 )
+
+type Credential struct {
+	ID        uuid.UUID `json:"id"`
+	AccessID  string    `json:"access_id"`
+	SecretKey string    `json:"secret_key"`
+}
+
+type Profile struct {
+	ID          uuid.UUID `json:"id"`
+	Description string    `json:"description"`
+	Region      string    `json:"region"`
+	CredID      uuid.UUID `json:"cred_id"`
+	Username    string    `json:"username"`
+}
 
 type User struct {
 	Username          string       `json:"username"`

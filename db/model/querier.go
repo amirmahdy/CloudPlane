@@ -9,7 +9,10 @@ import (
 )
 
 type Querier interface {
+	CreateCredential(ctx context.Context, arg CreateCredentialParams) (Credential, error)
+	CreateProfile(ctx context.Context, arg CreateProfileParams) (Profile, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	GetProfiles(ctx context.Context, arg GetProfilesParams) ([]GetProfilesRow, error)
 	GetUserPassword(ctx context.Context, username string) (string, error)
 }
 

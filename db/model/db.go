@@ -24,8 +24,17 @@ func New(db DBTX) *Queries {
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	q := Queries{db: db}
 	var err error
+	if q.createCredentialStmt, err = db.PrepareContext(ctx, createCredential); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateCredential: %w", err)
+	}
+	if q.createProfileStmt, err = db.PrepareContext(ctx, createProfile); err != nil {
+		return nil, fmt.Errorf("error preparing query CreateProfile: %w", err)
+	}
 	if q.createUserStmt, err = db.PrepareContext(ctx, createUser); err != nil {
 		return nil, fmt.Errorf("error preparing query CreateUser: %w", err)
+	}
+	if q.getProfilesStmt, err = db.PrepareContext(ctx, getProfiles); err != nil {
+		return nil, fmt.Errorf("error preparing query GetProfiles: %w", err)
 	}
 	if q.getUserPasswordStmt, err = db.PrepareContext(ctx, getUserPassword); err != nil {
 		return nil, fmt.Errorf("error preparing query GetUserPassword: %w", err)
@@ -35,9 +44,24 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 
 func (q *Queries) Close() error {
 	var err error
+	if q.createCredentialStmt != nil {
+		if cerr := q.createCredentialStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createCredentialStmt: %w", cerr)
+		}
+	}
+	if q.createProfileStmt != nil {
+		if cerr := q.createProfileStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing createProfileStmt: %w", cerr)
+		}
+	}
 	if q.createUserStmt != nil {
 		if cerr := q.createUserStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing createUserStmt: %w", cerr)
+		}
+	}
+	if q.getProfilesStmt != nil {
+		if cerr := q.getProfilesStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing getProfilesStmt: %w", cerr)
 		}
 	}
 	if q.getUserPasswordStmt != nil {
@@ -82,17 +106,23 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db                  DBTX
-	tx                  *sql.Tx
-	createUserStmt      *sql.Stmt
-	getUserPasswordStmt *sql.Stmt
+	db                   DBTX
+	tx                   *sql.Tx
+	createCredentialStmt *sql.Stmt
+	createProfileStmt    *sql.Stmt
+	createUserStmt       *sql.Stmt
+	getProfilesStmt      *sql.Stmt
+	getUserPasswordStmt  *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:                  tx,
-		tx:                  tx,
-		createUserStmt:      q.createUserStmt,
-		getUserPasswordStmt: q.getUserPasswordStmt,
+		db:                   tx,
+		tx:                   tx,
+		createCredentialStmt: q.createCredentialStmt,
+		createProfileStmt:    q.createProfileStmt,
+		createUserStmt:       q.createUserStmt,
+		getProfilesStmt:      q.getProfilesStmt,
+		getUserPasswordStmt:  q.getUserPasswordStmt,
 	}
 }
