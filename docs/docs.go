@@ -15,6 +15,45 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/profile/create": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "profile create",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Profile",
+                "parameters": [
+                    {
+                        "description": "Create Profile Param",
+                        "name": "createProfileRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.createProfileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.createProfileResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/create": {
             "post": {
                 "description": "user create",
@@ -85,6 +124,38 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "api.createProfileRequest": {
+            "type": "object",
+            "required": [
+                "access_id",
+                "description",
+                "region",
+                "secret_key"
+            ],
+            "properties": {
+                "access_id": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "description": {
+                    "type": "string"
+                },
+                "region": {
+                    "type": "string"
+                },
+                "secret_key": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.createProfileResponse": {
+            "type": "object",
+            "properties": {
+                "prof_id": {
+                    "type": "string"
+                }
+            }
+        },
         "api.createUserRequest": {
             "type": "object",
             "required": [

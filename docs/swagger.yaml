@@ -1,4 +1,26 @@
 definitions:
+  api.createProfileRequest:
+    properties:
+      access_id:
+        minLength: 6
+        type: string
+      description:
+        type: string
+      region:
+        type: string
+      secret_key:
+        type: string
+    required:
+    - access_id
+    - description
+    - region
+    - secret_key
+    type: object
+  api.createProfileResponse:
+    properties:
+      prof_id:
+        type: string
+    type: object
   api.createUserRequest:
     properties:
       email:
@@ -45,6 +67,30 @@ definitions:
 info:
   contact: {}
 paths:
+  /profile/create:
+    post:
+      consumes:
+      - application/json
+      description: profile create
+      parameters:
+      - description: Create Profile Param
+        in: body
+        name: createProfileRequest
+        required: true
+        schema:
+          $ref: '#/definitions/api.createProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.createProfileResponse'
+      security:
+      - BearerAuth: []
+      summary: Profile
+      tags:
+      - Profile
   /user/create:
     post:
       consumes:

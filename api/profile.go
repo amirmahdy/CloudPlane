@@ -3,7 +3,6 @@ package api
 import (
 	db "cloudplane/db/model"
 	"cloudplane/token"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -26,6 +25,7 @@ type createProfileResponse struct {
 // @Tags Profile
 // @Accept json
 // @Produce json
+// @Security BearerAuth
 // @Param createProfileRequest body createProfileRequest true "Create Profile Param"
 // @Success 200 {object} createProfileResponse
 // @Router /profile/create [post]
@@ -36,16 +36,14 @@ func (server *Server) createProfile(ctx *gin.Context) {
 		return
 	}
 
+	authPayload := ctx.MustGet("authorization_payload").(*token.Payload)
 	profParam := db.CreateProfileTXParam{
 		Region:      req.Region,
 		AccessID:    req.AccessID,
 		SecretKey:   req.SecretKey,
 		Description: req.Description,
+		Username:    authPayload.UserID,
 	}
-	_ = profParam
-
-	authPayload := ctx.MustGet("authorization_payload").(*token.Payload)
-	fmt.Println(authPayload.UserID)
 
 	profRes, err := server.store.CreateProfileTX(profParam)
 	if err != nil {

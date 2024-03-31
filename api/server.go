@@ -44,7 +44,7 @@ func (server *Server) setupRoutes() {
 	router.POST("/api/user/create", server.createUser)
 
 	authRouters := router.Group("/").Use(authMiddleware(server.token))
-	authRouters.POST("/profile/create", server.createProfile)
+	authRouters.POST("/api/profile/create", server.createProfile)
 
 	server.router = router
 }
