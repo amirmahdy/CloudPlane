@@ -21,7 +21,6 @@ func TestCreateProfileTX(t *testing.T) {
 	}
 	profRes, err := testStore.CreateProfileTX(profParam)
 	require.NoError(t, err)
-	require.NotZero(t, profRes.CredID)
 	require.NotZero(t, profRes.ProfID)
 
 	// test to check if we can retrieve the same profile using GetProfiles

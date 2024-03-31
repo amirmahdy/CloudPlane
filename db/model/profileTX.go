@@ -14,7 +14,6 @@ type CreateProfileTXParam struct {
 	Description string `json:"description"`
 }
 type CreateProfileTXResultType struct {
-	CredID uuid.UUID `json:"credential_id"`
 	ProfID uuid.UUID `json:"profile_id"`
 }
 
@@ -42,7 +41,6 @@ func (store *SqlStore) CreateProfileTX(t CreateProfileTXParam) (CreateProfileTXR
 			return err
 		}
 
-		res.CredID = profRes.CredID
 		res.ProfID = profRes.ID
 		return nil
 	})
